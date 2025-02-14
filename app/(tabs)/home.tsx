@@ -4,17 +4,15 @@ import {HelloWave} from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import {ThemedText} from '@/components/ThemedText';
 import {ThemedView} from '@/components/ThemedView';
-import type {PropsWithChildren, ReactElement} from "react";
+import {useLocalSearchParams} from "expo-router";
 
-type Props = PropsWithChildren<{
-    userData?: { firstName?: string; lastName?: string };
-}>;
+export default function HomeTab() {
+    const {firstName, lastName} = useLocalSearchParams();
 
-export default function HomeTab({userData}: Props) {
     return (
         <ParallaxScrollView>
             <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">Hello World Again {userData?.firstName}!</ThemedText>
+                <ThemedText type="title">Welcome {lastName}, {firstName}!</ThemedText>
                 <HelloWave/>
             </ThemedView>
             <ThemedView style={styles.stepContainer}>

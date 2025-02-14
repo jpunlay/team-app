@@ -1,21 +1,26 @@
 import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
-import {Redirect} from "expo-router";
-import {useState} from "react";
-import {Text, View} from "react-native";
+import React, {useState} from "react";
+import {View} from "react-native";
 import {LoginScreen} from "@/app/(auth)/login";
-import HomeTab from "@/app/(tabs)/home";
-import TabLayout from "@/app/(tabs)/_layout";
+import {useColorScheme} from "@/hooks/useColorScheme";
+import {router} from 'expo-router'
+
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userData, setUserData] = useState({});
 
-    const handleDataFromLogin = (data: any) => {
+    const handleDataFromLogin = async (data: any) => {
         setIsLoggedIn(data.isLoggedIn);
-        setUserData(data.userData);
+        router.push({
+            pathname: "/(tabs)/home",
+            params: {
+                firstName: data.userData.firstName,
+                lastName: data.userData.lastName
+            }
+        });
     };
 
     return (
@@ -23,9 +28,8 @@ export default function App() {
             {!isLoggedIn ? (
                 <LoginScreen onDataChange={handleDataFromLogin}/>
             ) : (
-                <TabLayout/>
+                <></>
             )}
         </View>
-
     );
 };

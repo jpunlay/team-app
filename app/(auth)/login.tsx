@@ -26,3 +26,5 @@ export const LoginScreen = ({onDataChange}: any) => {
         </View>
     );
 };
+
+export default LoginScreen;
