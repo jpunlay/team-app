@@ -48,3 +48,29 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## Troubleshooting
+To resolve this error `Pods/RNFBAuth: 'FirebaseAuth/FirebaseAuth-Swift.h' file not found`. These are the steps I followed:
+```sh
+cd ios
+npx expo prebuild --clean
+pod install --repo-update --ansi # optional if running into issues during the previous step
+```
+
+As stated in other comments, **add** these lines to your ios/Podfile
+```ruby
+use_frameworks! :linkage => :static
+$RNFirebaseAsStaticFramework = true
+```
+
+And **remove** this line
+```ruby
+use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
+```
+Then, I was able to run the project without issues
+
+```sh
+cd .. # to root
+npx expo run:ios --device   
+```
+
