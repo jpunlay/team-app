@@ -4,7 +4,7 @@ import {useColorScheme} from '@/hooks/useColorScheme';
 import {DarkTheme, DefaultTheme, ThemeProvider} from "@react-navigation/native";
 import {StatusBar} from "expo-status-bar";
 
-export default function AuthLayout() {
+const AuthLayout=()=> {
     const colorScheme = useColorScheme();
     return (
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -15,3 +15,4 @@ export default function AuthLayout() {
         </ThemeProvider>
     );
 }
+export default AuthLayout;

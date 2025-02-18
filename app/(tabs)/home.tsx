@@ -4,15 +4,29 @@ import {HelloWave} from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import {ThemedText} from '@/components/ThemedText';
 import {ThemedView} from '@/components/ThemedView';
-import {useLocalSearchParams} from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useEffect, useState} from "react";
 
 export default function HomeTab() {
-    const {firstName, lastName} = useLocalSearchParams();
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const first = await AsyncStorage.getItem('firstName');
+            const last = await AsyncStorage.getItem('lastName');
+            if (first && last) {
+                setFirstName(first);
+                setLastName(last);
+            }
+        };
+        fetchData();
+    }, []);
 
     return (
         <ParallaxScrollView>
             <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">Welcome {lastName}, {firstName}!</ThemedText>
+                <ThemedText type="title">Welcome, {firstName}!</ThemedText>
                 <HelloWave/>
             </ThemedView>
             <ThemedView style={styles.stepContainer}>

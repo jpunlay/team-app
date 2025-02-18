@@ -1,30 +1,69 @@
-import {Button, TextInput, View} from "react-native";
-import {GoogleLoginButton} from "@/components/GoogleLoginButton";
-import {useState} from "react";
+import {Alert} from "react-native";
+import {Button, Text} from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {router} from "expo-router";
+import {ThemedView} from "@/components/ThemedView";
+import {StyleSheet} from 'react-native';
 
-export const LoginScreen = ({onDataChange}: any) => {
-    const [userData, setUserData] = useState({
+/**
+ * Login screen for App. Should handle provider login
+ */
+export default function Login() {
+    const userData = {
         firstName: 'Pablo',
         lastName: 'Escobar'
-    });
+    }
 
-    const handleTextChange = (loginObject: any) => {
-        setUserData(loginObject);
-    };
-
-    const handleSendData = () => {
-        onDataChange({
-            isLoggedIn: true,
-            userData: userData
+    const handleGoogleLogin = async () => {
+        await AsyncStorage.setItem('firstName', userData.firstName);
+        await AsyncStorage.setItem('lastName', userData.lastName);
+        await AsyncStorage.setItem('isLoggedIn', 'true');
+        Alert.alert("Success", "Login successful!");
+        router.push({
+            pathname: "/(tabs)/home"
         });
     };
 
     return (
-        <View>
-            <GoogleLoginButton/>
-            <Button title="Send to Parent" onPress={handleSendData}/>
-        </View>
+        <ThemedView style={styles.container}>
+            <Button
+                style={styles.button}
+                icon="apple"
+                mode="contained-tonal"
+                buttonColor={"#eeeeee"}
+                onPress={handleGoogleLogin}
+            >
+                <Text> Login with Apple </Text>
+            </Button>
+            <Button
+                style={styles.button}
+                icon="google"
+                mode="contained-tonal"
+                buttonColor={"#eeeeee"}
+                onPress={handleGoogleLogin}
+            >
+                <Text> Login with Google</Text>
+            </Button>
+        </ThemedView>
     );
 };
 
-export default LoginScreen;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20,
+    },
+    button: {
+        marginVertical: 10,
+        width: '80%',
+        // Android shadow
+        elevation: 5,
+        // iOS shadow
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    }
+});
