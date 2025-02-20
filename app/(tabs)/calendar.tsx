@@ -3,58 +3,69 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import {ThemedText} from '@/components/ThemedText';
 import {ThemedView} from '@/components/ThemedView';
 import {IconSymbol} from '@/components/ui/IconSymbol';
-import {Avatar, Button, Card, PaperProvider, Text} from "react-native-paper";
+import {Avatar, Button, Card, Text} from "react-native-paper";
 
-import {useColorScheme} from "@/hooks/useColorScheme";
-import {DarkTheme, DefaultTheme, ThemeProvider} from "@react-navigation/native";
 import {ThemedCard} from "@/components/ThemedCard";
 
 export default function CalendarTab() {
     return (
         <ParallaxScrollView
             headerBackgroundColor={{light: '#D0D0D0', dark: '#353636'}}
-            headerImage={
-                <IconSymbol
-                    size={350}
-                    color="#808080"
-                    name="calendar"
-                    style={styles.headerImage}
-                />
-            }>
-            <ThemedView style={styles.titleContainer}>
+            >
+            <ThemedView>
                 <ThemedText type="title">Calendar</ThemedText>
+                <ThemedText type="subtitle"> {(new Date()).toDateString()} </ThemedText>
             </ThemedView>
-            <ThemedCard>
+            <ThemedCard style={styles.card}>
                 <Card.Title
                     title="vs Liverpool FC"
-                    subtitle="10:00am"
+                    subtitle="April 20th @ 10:00am"
                     left={(props) => <Avatar.Icon {...props} icon="calendar" style={styles.icon}/>}
                 />
                 <Card.Content>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Avatar.Icon size={20} icon="map-marker" style={styles.icon}/>
-                        <Text style={{ marginLeft: 5 }}>WRAL Soccer Complex</Text>
+                        <Text style={{marginLeft: 5}}>WRAL Soccer Complex</Text>
                     </View>
                 </Card.Content>
                 <Card.Actions>
                     <Button>Ok</Button>
                 </Card.Actions>
             </ThemedCard>
-            <Card>
+            <ThemedCard>
                 <Card.Title
                     title="vs Barcelona FC"
-                    subtitle="Card Subtitle"
-                    left={(props) => <Avatar.Icon {...props} icon="calendar" />}
+                    subtitle="July 4th @ 08:00am"
+                    left={(props) => <Avatar.Icon {...props} icon="calendar" style={styles.icon}/>}
                 />
                 <Card.Content>
-                    <Text variant="titleLarge">Card title</Text>
-                    <Text variant="bodyMedium">Card content</Text>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+
+                        <Avatar.Icon size={20} icon="map-marker" style={styles.icon}/>
+                        <Text style={{marginLeft: 5}}>WRAL Soccer Complex</Text>
+                    </View>
+
                 </Card.Content>
                 <Card.Actions>
-                    <Button>Cancel</Button>
                     <Button>Ok</Button>
                 </Card.Actions>
-            </Card>
+            </ThemedCard>
+            <ThemedCard>
+                <Card.Title
+                    title="vs Real Madrid"
+                    subtitle="December 25th @ 12:00pm"
+                    left={(props) => <Avatar.Icon {...props} icon="calendar" style={styles.icon}/>}
+                />
+                <Card.Content>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Avatar.Icon size={20} icon="map-marker" style={styles.icon}/>
+                        <Text style={{marginLeft: 15}}>WRAL Soccer Complex</Text>
+                    </View>
+                </Card.Content>
+                <Card.Actions>
+                    <Button>Ok</Button>
+                </Card.Actions>
+            </ThemedCard>
         </ParallaxScrollView>
     );
 }
@@ -63,19 +74,15 @@ const styles = StyleSheet.create({
     headerImage: {
         color: '#808080',
         padding: 100,
-
         top: 50,
         width: '100%',
         height: '80%',
-        // left: 20,
         position: 'absolute',
-    },
-    titleContainer: {
-        flexDirection: 'row',
-        gap: 8,
     },
     icon: {
         backgroundColor: '#005147',
-        // borderRadius: 10,
+    },
+    card: {
+        // height: '30%',
     }
 });
