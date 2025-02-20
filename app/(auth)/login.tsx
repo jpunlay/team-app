@@ -18,7 +18,7 @@ export default function Login() {
         await AsyncStorage.setItem('firstName', userData.firstName);
         await AsyncStorage.setItem('lastName', userData.lastName);
         await AsyncStorage.setItem('isLoggedIn', 'true');
-        Alert.alert("Success", "Login successful!");
+        // Alert.alert("Success", "Login successful!");
         router.push({
             pathname: "/(tabs)/home"
         });
