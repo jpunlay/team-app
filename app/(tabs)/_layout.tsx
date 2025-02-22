@@ -4,12 +4,17 @@ import {Platform} from 'react-native';
 
 import {HapticTab} from '@/components/HapticTab';
 import {IconSymbol} from '@/components/ui/IconSymbol';
+import {DarkTheme, DefaultTheme, ThemeProvider} from "@react-navigation/native";
+import {useColorScheme} from "@/hooks/useColorScheme";
 
 export default function TabLayout() {
+    const colorScheme = useColorScheme();
+
     return (
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Tabs
             screenOptions={{
-                tabBarActiveTintColor: '#005147',//Colors[colorScheme ?? 'light'].tint,
+                tabBarActiveTintColor: '#007869',//Colors[colorScheme ?? 'light'].tint,
                 headerShown: false,
                 tabBarButton: HapticTab,
                 // tabBarBackground: TabBarBackground,
@@ -50,5 +55,6 @@ export default function TabLayout() {
                 }}
             />
         </Tabs>
+        </ThemeProvider>
     );
 }

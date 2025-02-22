@@ -1,15 +1,24 @@
 import 'react-native-reanimated';
 import React from "react";
 import {StatusBar} from "expo-status-bar";
+import {PaperProvider} from "react-native-paper";
+import {DarkTheme} from "@react-navigation/native";
 
-/**
- * Main entry point for the app. This is where the app starts.
- */
+export const theme = {
+    ...DarkTheme,
+    colors: {
+        ...DarkTheme.colors,
+        primary: '#2d3436',
+        accent: '#1C1C1C',
+        background : '#636e72',
+    }
+};
+
 const App = () => {
     return (
-        <>
-            <StatusBar backgroundColor="#2A2C38" style="light"/>
-        </>
+        <PaperProvider theme={theme}>
+            <StatusBar/>
+        </PaperProvider>
     );
 };
 
