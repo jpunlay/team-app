@@ -64,8 +64,9 @@ const theme = {
     colors: {
         ...DarkTheme.colors,
         primary: '#2d3436',
-        accent: '#007869',
-        background: '#eeeeee',
+        accent: '#6c757d',
+        background: '#ffffff',
+        text: '#ffffff',
     }
 };
 
@@ -105,26 +106,34 @@ export default function CalendarTab() {
                                     {
                                         value: 'Going',
                                         label: 'Going',
-                                        icon: 'check',
                                         style: {
-                                            backgroundColor: item.attendance === 'Going' ? '#007869' : theme.colors.text,
-                                            borderColor: item.attendance === 'Going' ? '#007869' : theme.colors.background
+                                            backgroundColor: item.attendance === 'Going' ? '#6c757d' : theme.colors.text,
+                                            borderColor: item.attendance === 'Going' ? '#6c757d' : theme.colors.background
+                                        },
+                                        labelStyle: {
+                                            color: item.attendance === 'Going' ? theme.colors.background : theme.colors.primary
                                         }
                                     },
                                     {
                                         value: 'Maybe',
                                         label: 'Maybe',
                                         style: {
-                                            backgroundColor: item.attendance === 'Maybe' ? '#FF980E' : theme.colors.text,
-                                            borderColor: item.attendance === 'Maybe' ? '#FF980E' : theme.colors.background
+                                            backgroundColor: item.attendance === 'Maybe' ? '#6c757d' : theme.colors.text,
+                                            borderColor: item.attendance === 'Maybe' ? '#6c757d' : theme.colors.background,
+                                        },
+                                        labelStyle: {
+                                            color: item.attendance === 'Maybe' ? theme.colors.background : theme.colors.primary
                                         }
                                     },
                                     {
                                         value: 'Away',
                                         label: 'Away',
                                         style: {
-                                            backgroundColor: item.attendance === 'Away' ? '#ba2b2b' : theme.colors.text,
-                                            borderColor: item.attendance === 'Away' ? '#ba2b2b' : theme.colors.background
+                                            backgroundColor: item.attendance === 'Away' ? '#6c757d' : theme.colors.text,
+                                            borderColor: item.attendance === 'Away' ? '#6c757d' : theme.colors.background
+                                        },
+                                        labelStyle: {
+                                            color: item.attendance === 'Away' ? theme.colors.background : theme.colors.primary
                                         }
                                     }
                                 ]}
@@ -142,7 +151,7 @@ const styles = StyleSheet.create({
         margin: 10
     },
     icon: {
-        backgroundColor: '#eeeeee'
+        backgroundColor: theme.colors.background,
     },
     card: {
         // Android shadow
@@ -155,6 +164,6 @@ const styles = StyleSheet.create({
     },
     segmentedButton: {
         marginTop: 10,
-        marginHorizontal: 10,
+        marginHorizontal: 10
     }
 });
