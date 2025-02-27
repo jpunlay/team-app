@@ -2,9 +2,10 @@ import {StyleSheet} from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import {ThemedText} from '@/components/ThemedText';
 import {ThemedView} from '@/components/ThemedView';
-import {Avatar, Card, SegmentedButtons} from 'react-native-paper';
+import {Button, Card, Icon, SegmentedButtons} from 'react-native-paper';
 import {ThemedCard} from '@/components/ThemedCard';
 import {DarkTheme, DefaultTheme} from "@react-navigation/native";
+import React from "react";
 
 const mockedCalendarElements = [
     {
@@ -63,10 +64,11 @@ const theme = {
     ...DefaultTheme,
     colors: {
         ...DarkTheme.colors,
-        primary: '#2d3436',
-        accent: '#6c757d',
-        background: '#ffffff',
-        text: '#ffffff',
+        primary: '#6c757d',
+        accent: '#0e7862',
+        close: '#ca3134',
+        background: '#ced4da',
+        text: '#f8f9fa',
     }
 };
 
@@ -79,69 +81,94 @@ export default function CalendarTab() {
                 <ThemedText type='title'>Calendar</ThemedText>
             </ThemedView>
             {mockedCalendarElements.map((item) => (
-                <ThemedCard style={styles.card} key={item.id} theme={DarkTheme}>
-                    <Card.Title
-                        title={
-                            <ThemedText type={"defaultSemiBold"}>{item.title}</ThemedText>
-                        }
-                        subtitle={
-                            <ThemedText type={"default"}>{item.time}</ThemedText>
-                        }
-                        left={(props) => <Avatar.Icon {...props} icon='calendar' size={35} style={styles.icon}/>}
-                    />
-                    <Card.Content>
-                        <ThemedView style={{flexDirection: 'row', alignItems: 'center', width: '100%'}}>
-                            <Avatar.Icon theme={theme} size={20} icon='map-marker' style={styles.icon}/>
-                            <ThemedText style={{marginLeft: 10, overflow: 'hidden'}}>{item.location}</ThemedText>
-                        </ThemedView>
-                        <ThemedView
-                            style={{flexDirection: 'row', alignItems: 'center', width: '100%', marginBottom: 0}}>
-                            <SegmentedButtons
-                                theme={theme}
-                                density='high'
-                                style={styles.segmentedButton}
-                                value={item.attendance}
-                                onValueChange={console.log}
-                                buttons={[
-                                    {
-                                        value: 'Going',
-                                        label: 'Going',
-                                        style: {
-                                            backgroundColor: item.attendance === 'Going' ? '#6c757d' : theme.colors.text,
-                                            borderColor: item.attendance === 'Going' ? '#6c757d' : theme.colors.background
-                                        },
-                                        labelStyle: {
-                                            color: item.attendance === 'Going' ? theme.colors.background : theme.colors.primary
-                                        }
-                                    },
-                                    {
-                                        value: 'Maybe',
-                                        label: 'Maybe',
-                                        style: {
-                                            backgroundColor: item.attendance === 'Maybe' ? '#6c757d' : theme.colors.text,
-                                            borderColor: item.attendance === 'Maybe' ? '#6c757d' : theme.colors.background,
-                                        },
-                                        labelStyle: {
-                                            color: item.attendance === 'Maybe' ? theme.colors.background : theme.colors.primary
-                                        }
-                                    },
-                                    {
-                                        value: 'Away',
-                                        label: 'Away',
-                                        style: {
-                                            backgroundColor: item.attendance === 'Away' ? '#6c757d' : theme.colors.text,
-                                            borderColor: item.attendance === 'Away' ? '#6c757d' : theme.colors.background
-                                        },
-                                        labelStyle: {
-                                            color: item.attendance === 'Away' ? theme.colors.background : theme.colors.primary
-                                        }
+
+                    <ThemedCard style={styles.card} key={item.id} theme={DarkTheme}>
+                        <Card.Title
+                            title={
+                                <ThemedText type={"defaultSemiBold"}>{item.title}</ThemedText>
+                            }
+                            subtitle={
+                                <ThemedText type={"default"}>{item.time}</ThemedText>
+                            }
+                            left={(props) =>
+                                <Icon
+                                    source={
+                                        item.attendance === 'Going' ? 'check' :
+                                            item.attendance === 'Maybe' ? 'minus' :
+                                                'close'
                                     }
-                                ]}
-                            />
-                        </ThemedView>
-                    </Card.Content>
-                </ThemedCard>
-            ))}
+                                    size={30}
+                                    color={
+                                        item.attendance === 'Going' ? theme.colors.accent :
+                                            item.attendance === 'Maybe' ? theme.colors.primary :
+                                                theme.colors.close
+                                    }
+                                />
+                            }
+                        />
+                        <Card.Content>
+                            <ThemedView style={{flexDirection: 'row', alignItems: 'center', width: '100%'}}>
+                                <Icon source={'map-marker'} size={20} color={theme.colors.primary}/>
+                                <ThemedText style={{
+                                    marginLeft: 10,
+                                    overflow: 'hidden'
+                                }}>{item.location}</ThemedText>
+                            </ThemedView>
+                            <ThemedView
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    width: '100%',
+                                    marginBottom: 0
+                                }}>
+                                <SegmentedButtons
+                                    theme={theme}
+                                    density='high'
+                                    style={styles.segmentedButton}
+                                    value={item.attendance}
+                                    onValueChange={console.log}
+                                    buttons={[
+                                        {
+                                            value: 'Going',
+                                            label: 'Going',
+                                            style: {
+                                                backgroundColor: item.attendance === 'Going' ? theme.colors.accent : theme.colors.background,
+                                                borderColor: item.attendance === 'Going' ? theme.colors.accent : theme.colors.background
+                                            },
+                                            labelStyle: {
+                                                color: item.attendance === 'Going' ? theme.colors.text : theme.colors.primary
+                                            }
+                                        },
+                                        {
+                                            value: 'Maybe',
+                                            label: 'Maybe',
+                                            style: {
+                                                backgroundColor: theme.colors.background,
+                                                borderColor: theme.colors.background
+                                            },
+                                            labelStyle: {
+                                                color: theme.colors.primary
+                                            }
+                                        },
+                                        {
+                                            value: 'Away',
+                                            label: 'Away',
+                                            style: {
+                                                backgroundColor: item.attendance === 'Away' ? theme.colors.close : theme.colors.background,
+                                                borderColor: item.attendance === 'Away' ? theme.colors.close : theme.colors.background
+                                            },
+                                            labelStyle: {
+                                                color: item.attendance === 'Away' ? theme.colors.text : theme.colors.primary
+                                            }
+                                        }
+                                    ]}
+                                />
+                            </ThemedView>
+                        </Card.Content>
+                    </ThemedCard>
+                )
+            )
+            }
         </ParallaxScrollView>
     );
 }
