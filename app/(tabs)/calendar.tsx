@@ -2,63 +2,10 @@ import {StyleSheet} from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import {ThemedText} from '@/components/ThemedText';
 import {ThemedView} from '@/components/ThemedView';
-import {Button, Card, Icon, SegmentedButtons} from 'react-native-paper';
+import {Card, Icon, SegmentedButtons} from 'react-native-paper';
 import {ThemedCard} from '@/components/ThemedCard';
 import {DarkTheme, DefaultTheme} from "@react-navigation/native";
-import React from "react";
-
-const mockedCalendarElements = [
-    {
-        id: '1',
-        title: 'vs Liverpool FC',
-        time: 'April 20th @ 10:00am',
-        location: 'WRAL Soccer Complex',
-        attendance: 'Going'
-    },
-    {
-        id: '2',
-        title: 'vs Barcelona FC',
-        time: 'July 4th @ 08:00am',
-        location: 'WRAL Soccer Complex',
-        attendance: 'Away'
-    },
-    {
-        id: '3',
-        title: 'vs Real Madrid',
-        time: 'December 25th @ 12:00pm',
-        location: 'WRAL Soccer Complex',
-        attendance: 'Maybe'
-    },
-    {
-        id: '4',
-        title: 'vs Manchester United',
-        time: 'March 30th @ 03:00pm',
-        location: 'WRAL Soccer Complex',
-        attendance: 'Going'
-    },
-    {id: '5', title: 'vs Chelsea FC', time: 'June 10th @ 06:00pm', location: 'WRAL Soccer Complex', attendance: 'Away'},
-    {
-        id: '6',
-        title: 'vs Arsenal FC',
-        time: 'October 15th @ 09:00am',
-        location: 'WRAL Soccer Complex',
-        attendance: 'Maybe'
-    },
-    {
-        id: '7',
-        title: 'vs Tottenham FC',
-        time: 'February 5th @ 11:00am',
-        location: 'WRAL Soccer Complex',
-        attendance: 'Going'
-    },
-    {
-        id: '8',
-        title: 'vs Manchester City',
-        time: 'May 20th @ 02:00pm',
-        location: 'WRAL Soccer Complex',
-        attendance: 'Going'
-    },
-];
+import React, {useState} from "react";
 
 const theme = {
     ...DefaultTheme,
@@ -72,16 +19,84 @@ const theme = {
     }
 };
 
-
 export default function CalendarTab() {
-    // @ts-ignore
+    let [calenderElements, setCalendarElements] = useState([
+        {
+            id: '1',
+            title: 'vs Liverpool FC',
+            time: 'April 20th @ 10:00am',
+            location: 'WRAL Soccer Complex',
+            attendance: 'Going'
+        },
+        {
+            id: '2',
+            title: 'vs Barcelona FC',
+            time: 'July 4th @ 08:00am',
+            location: 'WRAL Soccer Complex',
+            attendance: 'Away'
+        },
+        {
+            id: '3',
+            title: 'vs Real Madrid',
+            time: 'December 25th @ 12:00pm',
+            location: 'WRAL Soccer Complex',
+            attendance: 'Maybe'
+        },
+        {
+            id: '4',
+            title: 'vs Manchester United',
+            time: 'March 30th @ 03:00pm',
+            location: 'WRAL Soccer Complex',
+            attendance: 'Going'
+        },
+        {
+            id: '5',
+            title: 'vs Chelsea FC',
+            time: 'June 10th @ 06:00pm',
+            location: 'WRAL Soccer Complex',
+            attendance: 'Away'
+        },
+        {
+            id: '6',
+            title: 'vs Arsenal FC',
+            time: 'October 15th @ 09:00am',
+            location: 'WRAL Soccer Complex',
+            attendance: 'Maybe'
+        },
+        {
+            id: '7',
+            title: 'vs Tottenham FC',
+            time: 'February 5th @ 11:00am',
+            location: 'WRAL Soccer Complex',
+            attendance: 'Going'
+        },
+        {
+            id: '8',
+            title: 'vs Manchester City',
+            time: 'May 20th @ 02:00pm',
+            location: 'WRAL Soccer Complex',
+            attendance: 'Going'
+        },
+    ]);
+
+    const handleAttendanceChange = (value: string, calendarElementId: string) => {
+        console.log('Attendance changed to:', value);
+        const updatedCalendarElements = calenderElements.map((item) => {
+            if (item.id === calendarElementId) {
+                return {...item, attendance: value};
+            }
+            return item;
+        });
+        setCalendarElements(updatedCalendarElements);
+    }
+
     return (
         <ParallaxScrollView>
             <ThemedView style={styles.titleContainer}>
                 <ThemedText type='title'>Calendar</ThemedText>
             </ThemedView>
-            {mockedCalendarElements.map((item) => (
 
+            {calenderElements.map((item) => (
                     <ThemedCard style={styles.card} key={item.id} theme={DarkTheme}>
                         <Card.Title
                             title={
@@ -126,7 +141,7 @@ export default function CalendarTab() {
                                     density='high'
                                     style={styles.segmentedButton}
                                     value={item.attendance}
-                                    onValueChange={console.log}
+                                    onValueChange={(value) => handleAttendanceChange(value, item.id)}
                                     buttons={[
                                         {
                                             value: 'Going',
