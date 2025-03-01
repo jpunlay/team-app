@@ -6,6 +6,8 @@ import {Card, Icon, SegmentedButtons} from 'react-native-paper';
 import {ThemedCard} from '@/components/ThemedCard';
 import {DarkTheme, DefaultTheme} from "@react-navigation/native";
 import React, {useState} from "react";
+import {Event} from '@/types/event';
+import {Attendance, AttendanceStatus} from "@/types/attendance";
 
 const theme = {
     ...DefaultTheme,
@@ -20,75 +22,141 @@ const theme = {
 };
 
 export default function CalendarTab() {
-    let [calenderElements, setCalendarElements] = useState([
+    let [events, setEvents] = useState<Event[]>([
         {
             id: '1',
             title: 'vs Liverpool FC',
             time: 'April 20th @ 10:00am',
             location: 'WRAL Soccer Complex',
-            attendance: 'Going'
+            teamId: '1234567890'
         },
         {
             id: '2',
             title: 'vs Barcelona FC',
             time: 'July 4th @ 08:00am',
             location: 'WRAL Soccer Complex',
-            attendance: 'Away'
+            teamId: '1234567890'
         },
         {
             id: '3',
             title: 'vs Real Madrid',
             time: 'December 25th @ 12:00pm',
             location: 'WRAL Soccer Complex',
-            attendance: 'Maybe'
+            teamId: '1234567890'
         },
         {
             id: '4',
             title: 'vs Manchester United',
             time: 'March 30th @ 03:00pm',
             location: 'WRAL Soccer Complex',
-            attendance: 'Going'
+            teamId: '1234567890'
         },
         {
             id: '5',
             title: 'vs Chelsea FC',
             time: 'June 10th @ 06:00pm',
             location: 'WRAL Soccer Complex',
-            attendance: 'Away'
+            teamId: '1234567890'
         },
         {
             id: '6',
             title: 'vs Arsenal FC',
             time: 'October 15th @ 09:00am',
             location: 'WRAL Soccer Complex',
-            attendance: 'Maybe'
+            teamId: '1234567890'
         },
         {
             id: '7',
             title: 'vs Tottenham FC',
             time: 'February 5th @ 11:00am',
             location: 'WRAL Soccer Complex',
-            attendance: 'Going'
+            teamId: '1234567890'
         },
         {
             id: '8',
             title: 'vs Manchester City',
             time: 'May 20th @ 02:00pm',
             location: 'WRAL Soccer Complex',
-            attendance: 'Going'
+            teamId: '1234567890'
         },
     ]);
+    let [attendance, setAttendance] = useState<Attendance[]>([
+        {
+            id: '1',
+            playerId: '1',
+            eventId: '1',
+            status: AttendanceStatus.Going
+        },
+        {
+            id: '2',
+            playerId: '1',
+            eventId: '2',
+            status: AttendanceStatus.Maybe
+        },
+        {
+            id: '3',
+            playerId: '1',
+            eventId: '3',
+            status: AttendanceStatus.Going
+        },
+        {
+            id: '4',
+            playerId: '1',
+            eventId: '4',
+            status: AttendanceStatus.Going
+        },
+        {
+            id: '5',
+            playerId: '1',
+            eventId: '5',
+            status: AttendanceStatus.Maybe
+        },
+        {
+            id: '6',
+            playerId: '1',
+            eventId: '6',
+            status: AttendanceStatus.Away
+        },
+        {
+            id: '7',
+            playerId: '1',
+            eventId: '7',
+            status: AttendanceStatus.Going
+        },
+        {
+            id: '8',
+            playerId: '1',
+            eventId: '8',
+            status: AttendanceStatus.Away
+        },
+        {
+            id: '9',
+            playerId: '1',
+            eventId: '9',
+            status:AttendanceStatus.Going
+        },
+        {
+            id: '10',
+            playerId: '1',
+            eventId: '10',
+            status: AttendanceStatus.Going
+        }
+    ])
 
-    const handleAttendanceChange = (value: string, calendarElementId: string) => {
+    const handleAttendanceChange = (value: AttendanceStatus, attendanceId: string) => {
         console.log('Attendance changed to:', value);
-        const updatedCalendarElements = calenderElements.map((item) => {
-            if (item.id === calendarElementId) {
-                return {...item, attendance: value};
+        const updatedAttendance: Attendance[] = attendance.map((item) => {
+            if (item.id === attendanceId) {
+                return {...item, status: value};
             }
             return item;
         });
-        setCalendarElements(updatedCalendarElements);
+        setAttendance(updatedAttendance);
+        console.log('Attendance changed to:', updatedAttendance);
+        console.log('Attendance changed to:', attendance.find(item => item.id === attendanceId));
     }
+
+    let mappedList: [Event, Attendance][] = events.map((item1, index) => [item1, attendance[index]]);
 
     return (
         <ParallaxScrollView>
@@ -96,26 +164,26 @@ export default function CalendarTab() {
                 <ThemedText type='title'>Calendar</ThemedText>
             </ThemedView>
 
-            {calenderElements.map((item) => (
-                    <ThemedCard style={styles.card} key={item.id} theme={DarkTheme}>
+            {mappedList.map(([event, attendance]) => (
+                    <ThemedCard style={styles.card} key={event.id}>
                         <Card.Title
                             title={
-                                <ThemedText type={"defaultSemiBold"}>{item.title}</ThemedText>
+                                <ThemedText type={"defaultSemiBold"}>{event.title}</ThemedText>
                             }
                             subtitle={
-                                <ThemedText type={"default"}>{item.time}</ThemedText>
+                                <ThemedText type={"default"}>{event.time}</ThemedText>
                             }
                             left={(props) =>
                                 <Icon
                                     source={
-                                        item.attendance === 'Going' ? 'check' :
-                                            item.attendance === 'Maybe' ? 'minus' :
+                                        attendance.status === 'Going' ? 'check' :
+                                            attendance.status === 'Maybe' ? 'minus' :
                                                 'close'
                                     }
                                     size={30}
                                     color={
-                                        item.attendance === 'Going' ? theme.colors.accent :
-                                            item.attendance === 'Maybe' ? theme.colors.primary :
+                                        attendance.status === 'Going' ? theme.colors.accent :
+                                            attendance.status === 'Maybe' ? theme.colors.primary :
                                                 theme.colors.close
                                     }
                                 />
@@ -127,7 +195,7 @@ export default function CalendarTab() {
                                 <ThemedText style={{
                                     marginLeft: 10,
                                     overflow: 'hidden'
-                                }}>{item.location}</ThemedText>
+                                }}>{event.location}</ThemedText>
                             </ThemedView>
                             <ThemedView
                                 style={{
@@ -137,21 +205,20 @@ export default function CalendarTab() {
                                     marginBottom: 0
                                 }}>
                                 <SegmentedButtons
-                                    theme={theme}
                                     density='high'
                                     style={styles.segmentedButton}
-                                    value={item.attendance}
-                                    onValueChange={(value) => handleAttendanceChange(value, item.id)}
+                                    value={attendance.status}
+                                    onValueChange={(value: string) => handleAttendanceChange(value as AttendanceStatus, attendance.id)}
                                     buttons={[
                                         {
                                             value: 'Going',
                                             label: 'Going',
                                             style: {
-                                                backgroundColor: item.attendance === 'Going' ? theme.colors.accent : theme.colors.background,
-                                                borderColor: item.attendance === 'Going' ? theme.colors.accent : theme.colors.background
+                                                backgroundColor: attendance.status === 'Going' ? theme.colors.accent : theme.colors.background,
+                                                borderColor: attendance.status === 'Going' ? theme.colors.accent : theme.colors.background
                                             },
                                             labelStyle: {
-                                                color: item.attendance === 'Going' ? theme.colors.text : theme.colors.primary
+                                                color: attendance.status === 'Going' ? theme.colors.text : theme.colors.primary
                                             }
                                         },
                                         {
@@ -169,11 +236,11 @@ export default function CalendarTab() {
                                             value: 'Away',
                                             label: 'Away',
                                             style: {
-                                                backgroundColor: item.attendance === 'Away' ? theme.colors.close : theme.colors.background,
-                                                borderColor: item.attendance === 'Away' ? theme.colors.close : theme.colors.background
+                                                backgroundColor: attendance.status === 'Away' ? theme.colors.close : theme.colors.background,
+                                                borderColor: attendance.status === 'Away' ? theme.colors.close : theme.colors.background
                                             },
                                             labelStyle: {
-                                                color: item.attendance === 'Away' ? theme.colors.text : theme.colors.primary
+                                                color: attendance.status === 'Away' ? theme.colors.text : theme.colors.primary
                                             }
                                         }
                                     ]}
@@ -190,10 +257,7 @@ export default function CalendarTab() {
 
 const styles = StyleSheet.create({
     titleContainer: {
-        margin: 10
-    },
-    icon: {
-        backgroundColor: theme.colors.background,
+        marginTop: 10
     },
     card: {
         // Android shadow

@@ -68,6 +68,7 @@ export default function HomeTab() {
 
 const styles = StyleSheet.create({
     titleContainer: {
+        marginTop: 10,
         flexDirection: 'row',
         alignItems: 'center',
         gap: 8,
