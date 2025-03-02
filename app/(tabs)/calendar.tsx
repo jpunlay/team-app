@@ -152,11 +152,9 @@ export default function CalendarTab() {
             return item;
         });
         setAttendance(updatedAttendance);
-        console.log('Attendance changed to:', updatedAttendance);
-        console.log('Attendance changed to:', attendance.find(item => item.id === attendanceId));
     }
 
-    let mappedList: [Event, Attendance][] = events.map((item1, index) => [item1, attendance[index]]);
+    let mappedList: [Event, Attendance][] = events.map((event, index) => [event, attendance.find(attendanceItem => attendanceItem.eventId === event.id)]);
 
     return (
         <ParallaxScrollView>
