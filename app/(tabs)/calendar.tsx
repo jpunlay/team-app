@@ -13,7 +13,7 @@ const theme = {
     ...DefaultTheme,
     colors: {
         ...DarkTheme.colors,
-        primary: '#6c757d',
+        primary: '#212529',
         accent: '#0e7862',
         close: '#ca3134',
         background: '#ced4da',
@@ -133,7 +133,7 @@ export default function CalendarTab() {
             id: '9',
             playerId: '1',
             eventId: '9',
-            status:AttendanceStatus.Going
+            status: AttendanceStatus.Going
         },
         {
             id: '10',
@@ -165,10 +165,10 @@ export default function CalendarTab() {
             </ThemedView>
 
             {mappedList.map(([event, attendance]) => (
-                    <ThemedCard style={styles.card} key={event.id}>
+                    <ThemedCard darkColor={theme.colors.primary} key={event.id} style={styles.card}>
                         <Card.Title
                             title={
-                                <ThemedText type={"defaultSemiBold"}>{event.title}</ThemedText>
+                                <ThemedText type={'defaultSemiBold'}>{event.title}</ThemedText>
                             }
                             subtitle={
                                 <ThemedText type={"default"}>{event.time}</ThemedText>
@@ -183,25 +183,31 @@ export default function CalendarTab() {
                                     size={30}
                                     color={
                                         attendance.status === 'Going' ? theme.colors.accent :
-                                            attendance.status === 'Maybe' ? theme.colors.primary :
+                                            attendance.status === 'Maybe' ? theme.colors.background :
                                                 theme.colors.close
                                     }
                                 />
                             }
                         />
                         <Card.Content>
-                            <ThemedView style={{flexDirection: 'row', alignItems: 'center', width: '100%'}}>
-                                <Icon source={'map-marker'} size={20} color={theme.colors.primary}/>
+                            <ThemedView
+                                darkColor={theme.colors.primary}
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    width: '100%'
+                                }}>
+                                <Icon source={'map-marker'} size={20} color={theme.colors.accent}/>
                                 <ThemedText style={{
                                     marginLeft: 10,
                                     overflow: 'hidden'
                                 }}>{event.location}</ThemedText>
                             </ThemedView>
                             <ThemedView
+                                darkColor={theme.colors.primary}
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',
-                                    width: '100%',
                                     marginBottom: 0
                                 }}>
                                 <SegmentedButtons
@@ -260,16 +266,9 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     card: {
-        // Android shadow
-        elevation: 5,
-        // iOS shadow
-        shadowColor: theme.colors.text,
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
+        // height: '10%',
     },
     segmentedButton: {
         marginTop: 10,
-        marginHorizontal: 10
     }
 });
