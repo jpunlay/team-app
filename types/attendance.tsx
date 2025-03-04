@@ -1,5 +1,5 @@
 export interface Attendance {
-    id: string;
+    id?: string;
     playerId: string;
     eventId: string;
     status: AttendanceStatus;

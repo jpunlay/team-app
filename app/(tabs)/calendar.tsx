@@ -5,9 +5,11 @@ import {ThemedView} from '@/components/ThemedView';
 import {Card, Icon, SegmentedButtons} from 'react-native-paper';
 import {ThemedCard} from '@/components/ThemedCard';
 import {DarkTheme, DefaultTheme} from "@react-navigation/native";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Event} from '@/types/event';
 import {Attendance, AttendanceStatus} from "@/types/attendance";
+import {getEvents} from "@/hooks/getEvents";
+import {getAttendance} from "@/hooks/getAttendance";
 
 const theme = {
     ...DefaultTheme,
@@ -22,128 +24,58 @@ const theme = {
 };
 
 export default function CalendarTab() {
-    let [events, setEvents] = useState<Event[]>([
-        {
-            id: '1',
-            title: 'vs Liverpool FC',
-            time: 'April 20th @ 10:00am',
-            location: 'WRAL Soccer Complex',
-            teamId: '1234567890'
-        },
-        {
-            id: '2',
-            title: 'vs Barcelona FC',
-            time: 'July 4th @ 08:00am',
-            location: 'WRAL Soccer Complex',
-            teamId: '1234567890'
-        },
-        {
-            id: '3',
-            title: 'vs Real Madrid',
-            time: 'December 25th @ 12:00pm',
-            location: 'WRAL Soccer Complex',
-            teamId: '1234567890'
-        },
-        {
-            id: '4',
-            title: 'vs Manchester United',
-            time: 'March 30th @ 03:00pm',
-            location: 'WRAL Soccer Complex',
-            teamId: '1234567890'
-        },
-        {
-            id: '5',
-            title: 'vs Chelsea FC',
-            time: 'June 10th @ 06:00pm',
-            location: 'WRAL Soccer Complex',
-            teamId: '1234567890'
-        },
-        {
-            id: '6',
-            title: 'vs Arsenal FC',
-            time: 'October 15th @ 09:00am',
-            location: 'WRAL Soccer Complex',
-            teamId: '1234567890'
-        },
-        {
-            id: '7',
-            title: 'vs Tottenham FC',
-            time: 'February 5th @ 11:00am',
-            location: 'WRAL Soccer Complex',
-            teamId: '1234567890'
-        },
-        {
-            id: '8',
-            title: 'vs Manchester City',
-            time: 'May 20th @ 02:00pm',
-            location: 'WRAL Soccer Complex',
-            teamId: '1234567890'
-        },
-    ]);
-    let [attendance, setAttendance] = useState<Attendance[]>([
-        {
-            id: '1',
-            playerId: '1',
-            eventId: '1',
-            status: AttendanceStatus.Going
-        },
-        {
-            id: '2',
-            playerId: '1',
-            eventId: '2',
-            status: AttendanceStatus.Maybe
-        },
-        {
-            id: '3',
-            playerId: '1',
-            eventId: '3',
-            status: AttendanceStatus.Going
-        },
-        {
-            id: '4',
-            playerId: '1',
-            eventId: '4',
-            status: AttendanceStatus.Going
-        },
-        {
-            id: '5',
-            playerId: '1',
-            eventId: '5',
-            status: AttendanceStatus.Maybe
-        },
-        {
-            id: '6',
-            playerId: '1',
-            eventId: '6',
-            status: AttendanceStatus.Away
-        },
-        {
-            id: '7',
-            playerId: '1',
-            eventId: '7',
-            status: AttendanceStatus.Going
-        },
-        {
-            id: '8',
-            playerId: '1',
-            eventId: '8',
-            status: AttendanceStatus.Away
-        },
-        {
-            id: '9',
-            playerId: '1',
-            eventId: '9',
-            status: AttendanceStatus.Going
-        },
-        {
-            id: '10',
-            playerId: '1',
-            eventId: '10',
-            status: AttendanceStatus.Going
-        }
-    ])
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [events, setEvents] = useState<Event[]>();
+    const [attendance, setAttendance] = useState<Attendance[]>([]);
+    const [eventAttendance, setEventAttendance] = useState<[Event, Attendance][]>([]);
 
-    const handleAttendanceChange = (value: AttendanceStatus, attendanceId: string) => {
+    useEffect(() => {
+        const eventsData = getEvents('', '');
+        setEvents(eventsData);
+    }, []);
+
+    useEffect(() => {
+        if (events && events.length > 0) {
+            const tempAttendanceList: Attendance[] = [];
+            try {
+                events.forEach(event => {
+                    const tempAttendance: Attendance = getAttendance(event);
+                    tempAttendanceList.push(tempAttendance);
+                })
+            } finally {
+                setAttendance(tempAttendanceList);
+            }
+        }
+    }, [events]);
+
+    useEffect(() => {
+        if (attendance) {
+            if (events && events.length > 0) {
+                let mappedList: [Event, Attendance][] = [];
+                try {
+                    mappedList = events.map((event, index) => [
+                        event,
+                        attendance.find(attendanceItem => attendanceItem.eventId === event.id)!
+                    ]);
+                } finally {
+                    setEventAttendance(mappedList);
+                    setIsDataLoaded(true);
+                }
+            }
+        }
+    }, [attendance]);
+
+    if (!isDataLoaded) {
+        return (
+            <ParallaxScrollView>
+                <ThemedView style={styles.titleContainer}>
+                    <ThemedText type='title'>Loading...</ThemedText>
+                </ThemedView>
+            </ParallaxScrollView>
+        )
+    }
+
+    const handleAttendanceChange = (value: AttendanceStatus, attendanceId: any) => {
         console.log('Attendance changed to:', value);
         const updatedAttendance: Attendance[] = attendance.map((item) => {
             if (item.id === attendanceId) {
@@ -154,15 +86,13 @@ export default function CalendarTab() {
         setAttendance(updatedAttendance);
     }
 
-    let mappedList: [Event, Attendance][] = events.map((event, index) => [event, attendance.find(attendanceItem => attendanceItem.eventId === event.id)]);
-
     return (
         <ParallaxScrollView>
             <ThemedView style={styles.titleContainer}>
                 <ThemedText type='title'>Calendar</ThemedText>
             </ThemedView>
 
-            {mappedList.map(([event, attendance]) => (
+            {eventAttendance.length > 0 ? eventAttendance.map(([event, attendance]) => (
                     <ThemedCard darkColor={theme.colors.primary} key={event.id} style={styles.card}>
                         <Card.Title
                             title={
@@ -209,10 +139,10 @@ export default function CalendarTab() {
                                     marginBottom: 0
                                 }}>
                                 <SegmentedButtons
-                                    density='high'
+                                    density='medium'
                                     style={styles.segmentedButton}
                                     value={attendance.status}
-                                    onValueChange={(value: string) => handleAttendanceChange(value as AttendanceStatus, attendance.id)}
+                                    onValueChange={(value: string) => handleAttendanceChange(value as AttendanceStatus, attendance?.id)}
                                     buttons={[
                                         {
                                             value: 'Going',
@@ -253,7 +183,7 @@ export default function CalendarTab() {
                         </Card.Content>
                     </ThemedCard>
                 )
-            )
+            ) : (<></>)
             }
         </ParallaxScrollView>
     );
