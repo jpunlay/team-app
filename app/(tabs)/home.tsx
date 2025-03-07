@@ -58,6 +58,11 @@ export default function HomeTab() {
         }
     }, [event]);
 
+    const handleAttendanceChange = (value: AttendanceStatus) => {
+        setAttendance({...attendance, status: value});
+        // call API to update attendance or save
+    }
+
     return (
         <ParallaxScrollView>
             <ThemedView style={styles.titleContainer}>
@@ -116,7 +121,7 @@ export default function HomeTab() {
                                     density='medium'
                                     style={styles.segmentedButton}
                                     value={attendance.status}
-                                    onValueChange={(value: string) => handleAttendanceChange(value as AttendanceStatus, attendance?.id)}
+                                    onValueChange={(value: string) => handleAttendanceChange(value as AttendanceStatus)}
                                     buttons={[
                                         {
                                             value: 'Going',
@@ -162,8 +167,7 @@ export default function HomeTab() {
             </ThemedView>
         </ParallaxScrollView>
     );
-}
-;
+};
 
 
 const styles = StyleSheet.create({
@@ -185,7 +189,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
     },
     subtitle: {
-      marginBottom: 8,
+        marginBottom: 8,
     },
     segmentedButton: {
         marginTop: 10,
