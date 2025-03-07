@@ -5,11 +5,33 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import {ThemedText} from '@/components/ThemedText';
 import {ThemedView} from '@/components/ThemedView';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+import {getEvents} from "@/hooks/getEvents";
+import {ThemedCard} from "@/components/ThemedCard";
+import {Card, Icon, SegmentedButtons} from "react-native-paper";
+import {Attendance, AttendanceStatus} from "@/types/attendance";
+import {Event} from "@/types/event";
+import {DarkTheme, DefaultTheme} from "@react-navigation/native";
+import {getAttendance} from "@/hooks/getAttendance";
+
+const theme = {
+    ...DefaultTheme,
+    colors: {
+        ...DarkTheme.colors,
+        primary: '#212529',
+        accent: '#0e7862',
+        close: '#ca3134',
+        background: '#ced4da',
+        text: '#f8f9fa',
+    }
+};
 
 export default function HomeTab() {
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [event, setEvent] = useState<Event>();
+    const [attendance, setAttendance] = useState<Attendance>();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -23,6 +45,19 @@ export default function HomeTab() {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        const eventsData: Event[] = getEvents('', '');
+        setEvent(eventsData[0]);
+    }, []);
+
+    useEffect(() => {
+        if (event) {
+            const tempAttendance: Attendance = getAttendance(event);
+            setAttendance(tempAttendance);
+            setIsDataLoaded(true);
+        }
+    }, [event]);
+
     return (
         <ParallaxScrollView>
             <ThemedView style={styles.titleContainer}>
@@ -30,40 +65,105 @@ export default function HomeTab() {
                 <HelloWave/>
             </ThemedView>
             <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-                <ThemedText>
-                    Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-                    Press{' '}
-                    <ThemedText type="defaultSemiBold">
-                        {Platform.select({
-                            ios: 'cmd + d',
-                            android: 'cmd + m',
-                            web: 'F12'
-                        })}
-                    </ThemedText>{' '}
-                    to open developer tools.
-                </ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-                <ThemedText>
-                    Tap the Explore tab to learn more about what's included in this starter app.
-                </ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-                <ThemedText>
-                    When you're ready, run{' '}
-                    <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-                    <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the
-                    current{' '}
-                    <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-                    <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-                </ThemedText>
+                <ThemedText style={styles.subtitle} type="subtitle">Upcoming Event</ThemedText>
+                {event && attendance ? (
+                    <ThemedCard darkColor={theme.colors.primary} key={event.id}>
+                        <Card.Title
+                            title={
+                                <ThemedText type={'defaultSemiBold'}>{event.title}</ThemedText>
+                            }
+                            subtitle={
+                                <ThemedText type={"default"}>{event.time}</ThemedText>
+                            }
+                            left={(props) =>
+                                <Icon
+                                    source={
+                                        attendance.status === 'Going' ? 'check' :
+                                            attendance.status === 'Maybe' ? 'minus' :
+                                                'close'
+                                    }
+                                    size={30}
+                                    color={
+                                        attendance.status === 'Going' ? theme.colors.accent :
+                                            attendance.status === 'Maybe' ? theme.colors.background :
+                                                theme.colors.close
+                                    }
+                                />
+                            }
+                        />
+                        <Card.Content>
+                            <ThemedView
+                                darkColor={theme.colors.primary}
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    width: '100%'
+                                }}>
+                                <Icon source={'map-marker'} size={20} color={theme.colors.accent}/>
+                                <ThemedText style={{
+                                    marginLeft: 10,
+                                    overflow: 'hidden'
+                                }}>{event.location}</ThemedText>
+                            </ThemedView>
+                            <ThemedView
+                                darkColor={theme.colors.primary}
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    marginBottom: 0
+                                }}>
+                                <SegmentedButtons
+                                    density='medium'
+                                    style={styles.segmentedButton}
+                                    value={attendance.status}
+                                    onValueChange={(value: string) => handleAttendanceChange(value as AttendanceStatus, attendance?.id)}
+                                    buttons={[
+                                        {
+                                            value: 'Going',
+                                            label: 'Going',
+                                            style: {
+                                                backgroundColor: attendance.status === 'Going' ? theme.colors.accent : theme.colors.background,
+                                                borderColor: attendance.status === 'Going' ? theme.colors.accent : theme.colors.background
+                                            },
+                                            labelStyle: {
+                                                color: attendance.status === 'Going' ? theme.colors.text : theme.colors.primary
+                                            }
+                                        },
+                                        {
+                                            value: 'Maybe',
+                                            label: 'Maybe',
+                                            style: {
+                                                backgroundColor: theme.colors.background,
+                                                borderColor: theme.colors.background
+                                            },
+                                            labelStyle: {
+                                                color: theme.colors.primary
+                                            }
+                                        },
+                                        {
+                                            value: 'Away',
+                                            label: 'Away',
+                                            style: {
+                                                backgroundColor: attendance.status === 'Away' ? theme.colors.close : theme.colors.background,
+                                                borderColor: attendance.status === 'Away' ? theme.colors.close : theme.colors.background
+                                            },
+                                            labelStyle: {
+                                                color: attendance.status === 'Away' ? theme.colors.text : theme.colors.primary
+                                            }
+                                        }
+                                    ]}
+                                />
+                            </ThemedView>
+                        </Card.Content>
+                    </ThemedCard>
+
+                ) : (<></>)
+                }
             </ThemedView>
         </ParallaxScrollView>
     );
-};
+}
+;
 
 
 const styles = StyleSheet.create({
@@ -84,4 +184,10 @@ const styles = StyleSheet.create({
         left: 0,
         position: 'absolute',
     },
+    subtitle: {
+      marginBottom: 8,
+    },
+    segmentedButton: {
+        marginTop: 10,
+    }
 });
