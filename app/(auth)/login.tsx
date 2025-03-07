@@ -1,4 +1,3 @@
-import {Alert} from "react-native";
 import {Button, Text} from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {router} from "expo-router";
@@ -10,15 +9,14 @@ import {StyleSheet} from 'react-native';
  */
 export default function Login() {
     const userData = {
-        firstName: 'Pablo',
-        lastName: 'Escobar'
+        firstName: 'Bob',
+        lastName: 'Belcher'
     }
 
     const handleGoogleLogin = async () => {
         await AsyncStorage.setItem('firstName', userData.firstName);
         await AsyncStorage.setItem('lastName', userData.lastName);
         await AsyncStorage.setItem('isLoggedIn', 'true');
-        // Alert.alert("Success", "Login successful!");
         router.push({
             pathname: "/(tabs)/home"
         });

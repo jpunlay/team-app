@@ -59,15 +59,15 @@ export const EventCard = ({event, attendance, onDataChange}: EventCardProps) => 
                 left={(props) =>
                     <Icon
                         source={
-                            attendanceData.status === 'Going' ? 'check' :
-                                attendanceData.status === 'Maybe' ? 'minus' :
-                                    'close'
+                            attendanceData.status === 'Going' ? 'check'
+                                : attendanceData.status === 'Maybe' ? 'minus'
+                                    : 'close'
                         }
                         size={30}
                         color={
-                            attendanceData.status === 'Going' ? theme.colors.accent :
-                                attendanceData.status === 'Maybe' ? theme.colors.background :
-                                    theme.colors.close
+                            attendanceData.status === 'Going' ? theme.colors.accent
+                                : attendanceData.status === 'Maybe' ? theme.colors.background
+                                    : theme.colors.close
                         }
                     />
                 }
@@ -97,7 +97,7 @@ export const EventCard = ({event, attendance, onDataChange}: EventCardProps) => 
                         density='medium'
                         style={styles.segmentedButton}
                         value={attendanceData.status}
-                        onValueChange={(value: string) => onDataChange(value as AttendanceStatus)}
+                        onValueChange={(value: string) => onDataChange(value as AttendanceStatus, attendance.id)}
                         buttons={[
                             {
                                 value: 'Going',

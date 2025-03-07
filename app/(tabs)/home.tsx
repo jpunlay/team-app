@@ -58,9 +58,9 @@ export default function HomeTab() {
             </ThemedView>
             <ThemedView style={styles.stepContainer}>
                 <ThemedText style={styles.subtitle} type="subtitle">Upcoming Event</ThemedText>
-                {event && attendance ?
-                    (<EventCard event={event} attendance={attendance} onDataChange={handleAttendanceChange}/>) :
-                    (<></>)
+                {event && attendance
+                    ? (<EventCard event={event} attendance={attendance} onDataChange={handleAttendanceChange}/>)
+                    : (<></>)
                 }
             </ThemedView>
         </ParallaxScrollView>
