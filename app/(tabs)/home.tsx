@@ -1,4 +1,4 @@
-import {StyleSheet, Platform} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import {HelloWave} from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -7,24 +7,11 @@ import {ThemedView} from '@/components/ThemedView';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {useEffect, useState} from "react";
 import {getEvents} from "@/hooks/getEvents";
-import {ThemedCard} from "@/components/ThemedCard";
-import {Card, Icon, SegmentedButtons} from "react-native-paper";
 import {Attendance, AttendanceStatus} from "@/types/attendance";
 import {Event} from "@/types/event";
-import {DarkTheme, DefaultTheme} from "@react-navigation/native";
 import {getAttendance} from "@/hooks/getAttendance";
+import {EventCard} from "@/components/EventCard";
 
-const theme = {
-    ...DefaultTheme,
-    colors: {
-        ...DarkTheme.colors,
-        primary: '#212529',
-        accent: '#0e7862',
-        close: '#ca3134',
-        background: '#ced4da',
-        text: '#f8f9fa',
-    }
-};
 
 export default function HomeTab() {
     const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -71,98 +58,9 @@ export default function HomeTab() {
             </ThemedView>
             <ThemedView style={styles.stepContainer}>
                 <ThemedText style={styles.subtitle} type="subtitle">Upcoming Event</ThemedText>
-                {event && attendance ? (
-                    <ThemedCard darkColor={theme.colors.primary} key={event.id}>
-                        <Card.Title
-                            title={
-                                <ThemedText type={'defaultSemiBold'}>{event.title}</ThemedText>
-                            }
-                            subtitle={
-                                <ThemedText type={"default"}>{event.time}</ThemedText>
-                            }
-                            left={(props) =>
-                                <Icon
-                                    source={
-                                        attendance.status === 'Going' ? 'check' :
-                                            attendance.status === 'Maybe' ? 'minus' :
-                                                'close'
-                                    }
-                                    size={30}
-                                    color={
-                                        attendance.status === 'Going' ? theme.colors.accent :
-                                            attendance.status === 'Maybe' ? theme.colors.background :
-                                                theme.colors.close
-                                    }
-                                />
-                            }
-                        />
-                        <Card.Content>
-                            <ThemedView
-                                darkColor={theme.colors.primary}
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    width: '100%'
-                                }}>
-                                <Icon source={'map-marker'} size={20} color={theme.colors.accent}/>
-                                <ThemedText style={{
-                                    marginLeft: 10,
-                                    overflow: 'hidden'
-                                }}>{event.location}</ThemedText>
-                            </ThemedView>
-                            <ThemedView
-                                darkColor={theme.colors.primary}
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    marginBottom: 0
-                                }}>
-                                <SegmentedButtons
-                                    density='medium'
-                                    style={styles.segmentedButton}
-                                    value={attendance.status}
-                                    onValueChange={(value: string) => handleAttendanceChange(value as AttendanceStatus)}
-                                    buttons={[
-                                        {
-                                            value: 'Going',
-                                            label: 'Going',
-                                            style: {
-                                                backgroundColor: attendance.status === 'Going' ? theme.colors.accent : theme.colors.background,
-                                                borderColor: attendance.status === 'Going' ? theme.colors.accent : theme.colors.background
-                                            },
-                                            labelStyle: {
-                                                color: attendance.status === 'Going' ? theme.colors.text : theme.colors.primary
-                                            }
-                                        },
-                                        {
-                                            value: 'Maybe',
-                                            label: 'Maybe',
-                                            style: {
-                                                backgroundColor: theme.colors.background,
-                                                borderColor: theme.colors.background
-                                            },
-                                            labelStyle: {
-                                                color: theme.colors.primary
-                                            }
-                                        },
-                                        {
-                                            value: 'Away',
-                                            label: 'Away',
-                                            style: {
-                                                backgroundColor: attendance.status === 'Away' ? theme.colors.close : theme.colors.background,
-                                                borderColor: attendance.status === 'Away' ? theme.colors.close : theme.colors.background
-                                            },
-                                            labelStyle: {
-                                                color: attendance.status === 'Away' ? theme.colors.text : theme.colors.primary
-                                            }
-                                        }
-                                    ]}
-                                />
-                            </ThemedView>
-                        </Card.Content>
-                    </ThemedCard>
-
-                ) : (<></>)
+                {event && attendance ?
+                    (<EventCard event={event} attendance={attendance} onDataChange={handleAttendanceChange}/>) :
+                    (<></>)
                 }
             </ThemedView>
         </ParallaxScrollView>
