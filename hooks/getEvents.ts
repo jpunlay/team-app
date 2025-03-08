@@ -1,6 +1,3 @@
-import {useEffect, useState} from 'react';
-import {Event} from '@/types/event';
-
 const mockedEvents = [
     {
         id: '1',

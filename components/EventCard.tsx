@@ -49,6 +49,7 @@ export const EventCard = ({event, attendance, onDataChange}: EventCardProps) => 
 
     return (
         <ThemedCard darkColor={theme.colors.primary} key={eventData.id}>
+            {/*<Card.Cover style={{tintColor: 'blue', backgroundColor: theme.colors.background}} source={{ uri: 'https://1000logos.net/wp-content/uploads/2017/03/Manchester-United-Logo-720x730.png' }} />*/}
             <Card.Title
                 title={
                     <ThemedText type={'defaultSemiBold'}>{eventData.title}</ThemedText>
