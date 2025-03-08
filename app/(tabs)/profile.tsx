@@ -4,7 +4,6 @@ import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { Avatar } from 'react-native-paper';
 import {ThemedCard} from "@/components/ThemedCard";
 import {DarkTheme, DefaultTheme} from "@react-navigation/native";
@@ -116,6 +115,6 @@ const styles = StyleSheet.create({
         display: "flex"
     },
     image: {
-        marginTop: 30,
+        marginTop: 50,
     }
 });
