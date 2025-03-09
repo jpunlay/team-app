@@ -4,33 +4,19 @@ import {HelloWave} from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import {ThemedText} from '@/components/ThemedText';
 import {ThemedView} from '@/components/ThemedView';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {getEvents} from "@/hooks/getEvents";
 import {Attendance, AttendanceStatus} from "@/types/attendance";
 import {Event} from "@/types/event";
 import {getAttendance} from "@/hooks/getAttendance";
 import {EventCard} from "@/components/EventCard";
+import AuthContext from "@/context/AuthContext";
 
 
 export default function HomeTab() {
-    const [isDataLoaded, setIsDataLoaded] = useState(false);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const {user}: any = useContext(AuthContext);
     const [event, setEvent] = useState<Event>();
     const [attendance, setAttendance] = useState<Attendance>();
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const first = await AsyncStorage.getItem('firstName');
-            const last = await AsyncStorage.getItem('lastName');
-            if (first && last) {
-                setFirstName(first);
-                setLastName(last);
-            }
-        };
-        fetchData();
-    }, []);
 
     useEffect(() => {
         const eventsData: Event[] = getEvents('', '');
@@ -41,7 +27,6 @@ export default function HomeTab() {
         if (event) {
             const tempAttendance: Attendance = getAttendance(event);
             setAttendance(tempAttendance);
-            setIsDataLoaded(true);
         }
     }, [event]);
 
@@ -53,7 +38,7 @@ export default function HomeTab() {
     return (
         <ParallaxScrollView>
             <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">Welcome, {firstName}!</ThemedText>
+                <ThemedText type="title">Welcome, {user?.firstName}</ThemedText>
                 <HelloWave/>
             </ThemedView>
             <ThemedView style={styles.stepContainer}>

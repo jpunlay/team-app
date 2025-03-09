@@ -1,22 +1,25 @@
 import {Button, Text} from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {router} from "expo-router";
 import {ThemedView} from "@/components/ThemedView";
 import {StyleSheet} from 'react-native';
+import React, {useContext} from "react";
+import AuthContext from "@/context/AuthContext";
 
-/**
- * Login screen for App. Should handle provider login
- */
-export default function Login() {
-    const userData = {
+
+export default function SignIn() {
+    const {login}: any = useContext(AuthContext);
+
+    const mockedUserData = {
+        id: '123456',
         firstName: 'Bob',
-        lastName: 'Belcher'
+        lastName: 'Belcher',
+        email: 'bob@bob.com',
+        phoneNumber: '123456',
     }
 
-    const handleGoogleLogin = async () => {
-        await AsyncStorage.setItem('firstName', userData.firstName);
-        await AsyncStorage.setItem('lastName', userData.lastName);
-        await AsyncStorage.setItem('isLoggedIn', 'true');
+    const handleLogin = async () => {
+        login(mockedUserData);
+        // navigate to homepage after user is logged in
         router.push({
             pathname: "/(tabs)/home"
         });
@@ -29,7 +32,7 @@ export default function Login() {
                 icon="apple"
                 mode="contained-tonal"
                 buttonColor={"#eeeeee"}
-                onPress={handleGoogleLogin}
+                onPress={handleLogin}
             >
                 <Text> Login with Apple </Text>
             </Button>
@@ -38,7 +41,7 @@ export default function Login() {
                 icon="google"
                 mode="contained-tonal"
                 buttonColor={"#eeeeee"}
-                onPress={handleGoogleLogin}
+                onPress={handleLogin}
             >
                 <Text> Login with Google</Text>
             </Button>

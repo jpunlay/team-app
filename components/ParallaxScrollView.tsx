@@ -12,7 +12,7 @@ import { useBottomTabOverflow } from '@/components/ui/TabBarBackground';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import {useThemeColor} from "@/hooks/useThemeColor";
 
-const HEADER_HEIGHT = 0;
+const HEADER_HEIGHT = 20;
 
 type Props = PropsWithChildren<{
   headerImage?: ReactElement;
