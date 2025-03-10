@@ -1,9 +1,12 @@
-import React, {createContext, useState, useContext, useMemo} from 'react';
+import React, {createContext, useState, useMemo} from 'react';
+import {router} from "expo-router";
 
 const AuthContext = createContext({
     user: null,
-    login: () => {},
-    logout: () => {},
+    login: () => {
+    },
+    logout: () => {
+    },
     isLoggedIn: false,
 });
 
@@ -19,6 +22,9 @@ export const AuthProvider = ({children}: any) => {
     const logout = () => {
         setUser(null);
         setIsLoggedIn(false);
+        router.push({
+            pathname: "/"
+        });
     };
 
     const value: any = useMemo(
@@ -37,9 +43,5 @@ export const AuthProvider = ({children}: any) => {
         </AuthContext.Provider>
     );
 };
-
-// const useAuth = () => {
-//     return useContext(AuthContext);
-// };
 
 export default AuthContext;

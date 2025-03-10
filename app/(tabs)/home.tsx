@@ -45,7 +45,7 @@ export default function HomeTab() {
                 <ThemedText style={styles.subtitle} type="subtitle">Upcoming Event</ThemedText>
                 {event && attendance
                     ? (<EventCard event={event} attendance={attendance} onDataChange={handleAttendanceChange}/>)
-                    : (<></>)
+                    : (<ThemedText>No new events</ThemedText>)
                 }
             </ThemedView>
         </ParallaxScrollView>

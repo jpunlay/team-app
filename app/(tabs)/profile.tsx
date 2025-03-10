@@ -1,35 +1,24 @@
-import {StyleSheet, Platform} from 'react-native';
+import {StyleSheet} from 'react-native';
 
-import {Collapsible} from '@/components/Collapsible';
-import {ExternalLink} from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import {ThemedText} from '@/components/ThemedText';
-import {Avatar} from 'react-native-paper';
+import {Avatar, Button, Card, PaperProvider} from 'react-native-paper';
 import {ThemedCard} from "@/components/ThemedCard";
-import {DarkTheme, DefaultTheme} from "@react-navigation/native";
 import React, {useContext} from "react";
 import AuthContext from "@/context/AuthContext";
-
-const theme = {
-    ...DefaultTheme,
-    colors: {
-        ...DarkTheme.colors,
-        primary: '#212529',
-        accent: '#0e7862',
-        close: '#ca3134',
-        background: '#ced4da',
-        text: '#f8f9fa',
-    }
-};
+import {IconSymbol} from "@/components/ui/IconSymbol";
+import {useThemeColor} from "@/hooks/useThemeColor";
 
 export default function ProfileTab() {
     const {user, logout}: any = useContext(AuthContext);
 
+    const handleLogout = () => {
+        logout();
+    }
+
     return (
-        <ParallaxScrollView
-            headerBackgroundColor={{light: '#D0D0D0', dark: '#353636'}}
-        >
-            <ThemedCard style={styles.card} darkColor={theme.colors.primary}>
+        <ParallaxScrollView>
+            <ThemedCard style={styles.userCard}>
                 <Avatar.Image
                     style={styles.image}
                     size={200}
@@ -37,49 +26,65 @@ export default function ProfileTab() {
                 />
                 <ThemedText style={styles.name} type={'title'}>{user?.firstName} {user?.lastName}</ThemedText>
             </ThemedCard>
-            <ThemedText>This app includes example code to help you get started.</ThemedText>
-            <Collapsible title="File-based routing">
-                <ThemedText>
-                    This app has two screens:{' '}
-                    <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-                    <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-                </ThemedText>
-                <ThemedText>
-                    The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-                    sets up the tab navigator.
-                </ThemedText>
-                <ExternalLink href="https://docs.expo.dev/router/introduction">
-                    <ThemedText type="link">Learn more</ThemedText>
-                </ExternalLink>
-            </Collapsible>
-            <Collapsible title="Animations">
-                <ThemedText>
-                    This template includes an example of an animated component. The{' '}
-                    <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-                    the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-                    library to create a waving hand animation.
-                </ThemedText>
-                {Platform.select({
-                    ios: (
-                        <ThemedText>
-                            The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-                            component provides a parallax effect for the header image.
-                        </ThemedText>
-                    ),
-                })}
-            </Collapsible>
+            <ThemedCard style={styles.buttonCard}>
+                <Card.Content style={styles.buttonCardContent}>
+                    <IconSymbol
+                        color={useThemeColor({}, 'icon')}
+                        name="gearshape.fill"
+                    />
+                    <ThemedText
+                        style={{color: useThemeColor({}, 'icon')}}
+                        type={'defaultSemiBold'}>
+                        Settings
+                    </ThemedText>
+                    <IconSymbol
+                        color={useThemeColor({}, 'icon')}
+                        name="arrow.right"
+                    />
+                </Card.Content>
+            </ThemedCard>
+            <ThemedCard style={styles.buttonCard}>
+                <Card.Content style={styles.buttonCardContent}>
+                    <IconSymbol
+                        color={useThemeColor({}, 'icon')}
+                        name='person.3.fill'
+                    />
+                    <ThemedText
+                        style={{color: useThemeColor({}, 'icon')}}
+                        type={'defaultSemiBold'}>
+                        Teams
+                    </ThemedText>
+                    <IconSymbol
+                        color={useThemeColor({}, 'icon')}
+                        name="arrow.right"
+                    />
+                </Card.Content>
+            </ThemedCard>
+            <PaperProvider settings={{rippleEffectEnabled: false}}>
+                <Button mode='text' textColor={useThemeColor({}, 'close')} onPress={handleLogout}>Log out</Button>
+            </PaperProvider>
         </ParallaxScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    card: {
+    userCard: {
         width: '100%',
-        height: 400,
+        height: 450,
         flex: 1,
         alignItems: 'center',
-        // justifyContent: "center",
         display: "flex"
+    },
+    buttonCard: {
+        width: '100%',
+        height: 60,
+        justifyContent: 'center',
+    },
+    buttonCardContent: {
+        marginHorizontal: 10,
+        flexDirection: 'row',
+        display: 'flex',
+        justifyContent: 'space-between'
     },
     image: {
         marginTop: 50,

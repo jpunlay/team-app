@@ -1,41 +1,35 @@
 import {Tabs} from 'expo-router';
 import React from 'react';
-import {Platform} from 'react-native';
-
 import {HapticTab} from '@/components/HapticTab';
 import {IconSymbol} from '@/components/ui/IconSymbol';
-import {DarkTheme, DefaultTheme, ThemeProvider} from "@react-navigation/native";
-import {useColorScheme} from "@/hooks/useColorScheme";
 import {Appbar, Avatar} from "react-native-paper";
+import {useThemeColor} from "@/hooks/useThemeColor";
+
 
 export default function TabLayout() {
-    const colorScheme = useColorScheme();
-
     return (
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <>
             <Appbar.Header
-                theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
                 style={{
                     height: 10,
-                    backgroundColor: (colorScheme === 'dark' ? DarkTheme.colors.card : DefaultTheme.colors.card)
+                    backgroundColor: useThemeColor({}, 'background')
                 }}
                 mode={'small'}>
                 <Appbar.Content title=""/>
             </Appbar.Header>
             <Tabs
                 screenOptions={{
+                    tabBarStyle: {
+                        height: 70,
+                        borderWidth: 1,
+                        borderColor: useThemeColor({}, 'background'),
+                        borderTopColor: useThemeColor({}, 'card'),
+                        backgroundColor: useThemeColor({}, 'background'),
+                    },
                     tabBarShowLabel: false,
-                    tabBarActiveTintColor: '#343a40',//Colors[colorScheme ?? 'light'].tint,
+                    tabBarActiveTintColor: useThemeColor({}, 'text'),
                     headerShown: false,
-                    tabBarButton: HapticTab,
-                    tabBarStyle: Platform.select({
-                        ios: {
-                            // Use a transparent background on iOS to show the blur effect
-                            position: 'absolute',
-                            paddingTop: 5
-                        },
-                        default: {},
-                    }),
+                    tabBarButton: HapticTab
                 }}>
                 <Tabs.Screen
                     name="home"
@@ -69,6 +63,6 @@ export default function TabLayout() {
                     }}
                 />
             </Tabs>
-        </ThemeProvider>
+        </>
     );
 }
