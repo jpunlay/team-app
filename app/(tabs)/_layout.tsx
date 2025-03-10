@@ -11,11 +11,21 @@ export default function TabLayout() {
         <>
             <Appbar.Header
                 style={{
-                    height: 10,
+                    height: 20,
                     backgroundColor: useThemeColor({}, 'background')
                 }}
                 mode={'small'}>
-                <Appbar.Content title=""/>
+                <Appbar.Content
+                    title="Team"
+                    titleStyle={{
+                        fontSize: 18,
+                        fontFamily: 'Avenir',
+                        fontStyle: 'italic',
+                        color: useThemeColor({}, "icon"),
+                        height: 40,
+                        textAlignVertical: 'center',
+                        textAlign: 'center',
+                    }}/>
             </Appbar.Header>
             <Tabs
                 screenOptions={{
